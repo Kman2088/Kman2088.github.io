@@ -1,0 +1,16 @@
+{
+	"name": "Source_Raw_Westhighway",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "WestHighway",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation"
+			}
+		}
+	}
+}

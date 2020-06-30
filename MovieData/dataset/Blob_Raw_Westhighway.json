@@ -1,0 +1,21 @@
+{
+	"name": "Blob_Raw_Westhighway",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Blob_Raw_Layer",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": {
+					"value": "@concat('WestHighway/',formatDateTime(utcnow(),'yyyy/MM/dd'))",
+					"type": "Expression"
+				},
+				"container": "raw"
+			}
+		}
+	}
+}
