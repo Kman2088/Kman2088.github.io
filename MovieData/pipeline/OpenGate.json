@@ -58,7 +58,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"p_ds_FileName": {
-								"value": "@concat(pipeline().parameters.p_TableName.csv)",
+								"value": "@concat(pipeline().parameters.p_TableName,'.csv')",
 								"type": "Expression"
 							}
 						}
