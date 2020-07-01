@@ -1,0 +1,31 @@
+{
+	"name": "Target_Raw_OG",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Blob_Raw_Layer",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"p_ds_FileName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": {
+					"value": "@concat('OpenGate/',formatDateTime(utcnow(),'yyyy/MM/dd'))",
+					"type": "Expression"
+				},
+				"container": "raw"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}

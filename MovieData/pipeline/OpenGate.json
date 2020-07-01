@@ -1,0 +1,77 @@
+{
+	"name": "OpenGate",
+	"properties": {
+		"activities": [
+			{
+				"name": "OnPremToRaw",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobStorageWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "Source_SQL_OG",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_ds_TableName": {
+								"value": "@pipeline().parameters.p_TableName",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Target_Raw_OG",
+						"type": "DatasetReference",
+						"parameters": {
+							"p_ds_FileName": {
+								"value": "@concat(pipeline().parameters.p_TableName.csv)",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"p_TableName": {
+				"type": "string",
+				"defaultValue": "dbo.movies"
+			}
+		},
+		"annotations": []
+	}
+}

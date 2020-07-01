@@ -1,0 +1,17 @@
+{
+	"name": "Source_SQL_OG",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OG_SQL_Movies",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"p_ds_TableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
