@@ -69,7 +69,7 @@
 		"parameters": {
 			"p_TableName": {
 				"type": "string",
-				"defaultValue": "dbo.Movies"
+				"defaultValue": "Movies"
 			}
 		},
 		"annotations": []

@@ -15,6 +15,10 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().p_ds_FileName",
+					"type": "Expression"
+				},
 				"folderPath": {
 					"value": "@concat('OpenGate/',formatDateTime(utcnow(),'yyyy/MM/dd'))",
 					"type": "Expression"
