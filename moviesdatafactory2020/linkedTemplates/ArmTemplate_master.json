@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Blob_Raw_Layer'"
 		},
+		"OG_SQL_Movies_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'OG_SQL_Movies'"
+		},
 		"WestHighway_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'WestHighway'"
@@ -52,6 +56,9 @@
 					},
 					"Blob_Raw_Layer_connectionString": {
 						"value": "[parameters('Blob_Raw_Layer_connectionString')]"
+					},
+					"OG_SQL_Movies_connectionString": {
+						"value": "[parameters('OG_SQL_Movies_connectionString')]"
 					},
 					"WestHighway_password": {
 						"value": "[parameters('WestHighway_password')]"

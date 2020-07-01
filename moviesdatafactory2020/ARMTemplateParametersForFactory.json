@@ -8,6 +8,9 @@
 		"Blob_Raw_Layer_connectionString": {
 			"value": ""
 		},
+		"OG_SQL_Movies_connectionString": {
+			"value": ""
+		},
 		"WestHighway_password": {
 			"value": ""
 		},

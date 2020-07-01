@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Blob_Raw_Layer'"
 		},
+		"OG_SQL_Movies_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'OG_SQL_Movies'"
+		},
 		"WestHighway_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'WestHighway'"
@@ -28,6 +32,89 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/OpenGate')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "OnPremToRaw",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "Source_SQL_OG",
+								"type": "DatasetReference",
+								"parameters": {
+									"p_ds_TableName": {
+										"value": "@pipeline().parameters.p_TableName",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Target_Raw_OG",
+								"type": "DatasetReference",
+								"parameters": {
+									"p_ds_FileName": {
+										"value": "@concat(pipeline().parameters.p_TableName,'.csv')",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"parameters": {
+					"p_TableName": {
+						"type": "string",
+						"defaultValue": "dbo.Movies"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Source_SQL_OG')]",
+				"[concat(variables('factoryId'), '/datasets/Target_Raw_OG')]"
+			]
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/WestHighway')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
@@ -138,6 +225,71 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/Source_SQL_OG')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OG_SQL_Movies",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"p_ds_TableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": {
+						"value": "@dataset().p_ds_TableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/OG_SQL_Movies')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Target_Raw_OG')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "Blob_Raw_Layer",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"p_ds_FileName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"folderPath": {
+							"value": "@concat('OpenGate/',formatDateTime(utcnow(),'yyyy/MM/dd'))",
+							"type": "Expression"
+						},
+						"container": "raw"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/Blob_Raw_Layer')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Blob_Raw_Layer')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -149,6 +301,25 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OG_SQL_Movies')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"connectionString": "[parameters('OG_SQL_Movies_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "OnPremiseOpenGate",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/OnPremiseOpenGate')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/WestHighway')]",
@@ -173,16 +344,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/integrationRuntimes/OnPremWestHighway')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/OnPremWestHighway')]",
-			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "SelfHosted",
-				"typeProperties": {}
-			},
-			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/WestHighway_Daily')]",
@@ -222,6 +383,35 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/pipelines/WestHighway')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OnPremWestHighway')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OnPremiseOpenGate')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "Managed",
+				"typeProperties": {
+					"computeProperties": {
+						"location": "AutoResolve",
+						"dataFlowProperties": {
+							"computeType": "General",
+							"coreCount": 8,
+							"timeToLive": 0
+						}
+					}
+				}
+			},
+			"dependsOn": []
 		}
 	]
 }
