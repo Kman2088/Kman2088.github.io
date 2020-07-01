@@ -1,0 +1,6 @@
+{
+	"name": "OnPremOpenGate",
+	"properties": {
+		"type": "SelfHosted"
+	}
+}
