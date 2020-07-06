@@ -1,0 +1,21 @@
+{
+	"name": "Raw_Json_BigBrother_Movies",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Blob_Raw_Layer",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"folderPath": {
+					"value": "@concat('BigBrother/',formatDateTime(utcnow('yyyy/MM/dd')))",
+					"type": "Expression"
+				},
+				"container": "raw"
+			}
+		}
+	}
+}
