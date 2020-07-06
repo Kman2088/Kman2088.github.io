@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "moviesdatafactory2020"
 		},
+		"BG_Cosmos_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'BG_Cosmos'"
+		},
 		"Blob_Raw_Layer_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'Blob_Raw_Layer'"
@@ -53,6 +57,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"BG_Cosmos_connectionString": {
+						"value": "[parameters('BG_Cosmos_connectionString')]"
 					},
 					"Blob_Raw_Layer_connectionString": {
 						"value": "[parameters('Blob_Raw_Layer_connectionString')]"
