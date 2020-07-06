@@ -465,6 +465,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "AzureSqlSource",
+								"sqlReaderQuery": "Select SourceTable From Control_Table Where Active=1",
 								"queryTimeout": "02:00:00"
 							},
 							"dataset": {
