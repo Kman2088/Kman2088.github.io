@@ -11,7 +11,7 @@
 			"location": {
 				"type": "AzureBlobStorageLocation",
 				"folderPath": {
-					"value": "@concat('BigBrother/',formatDateTime(utcnow('yyyy/MM/dd')))",
+					"value": "@concat('BigBrother/',formatDateTime(utcnow(),'yyyy/MM/dd'))",
 					"type": "Expression"
 				},
 				"container": "raw"
