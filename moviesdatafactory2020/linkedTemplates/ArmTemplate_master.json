@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "moviesdatafactory2020"
 		},
+		"BB_Azure_SQL_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'BB_Azure_SQL'"
+		},
 		"BG_Cosmos_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'BG_Cosmos'"
@@ -57,6 +61,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"BB_Azure_SQL_connectionString": {
+						"value": "[parameters('BB_Azure_SQL_connectionString')]"
 					},
 					"BG_Cosmos_connectionString": {
 						"value": "[parameters('BG_Cosmos_connectionString')]"
