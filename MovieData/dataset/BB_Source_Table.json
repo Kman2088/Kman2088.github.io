@@ -1,0 +1,24 @@
+{
+	"name": "BB_Source_Table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "BB_Azure_SQL",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"p_SourceTable": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": {
+				"value": "@dataset().p_SourceTable",
+				"type": "Expression"
+			}
+		}
+	}
+}
